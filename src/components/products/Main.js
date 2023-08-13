@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import Row from './Row';
-import { onValue, ref, push, update } from 'firebase/database';
+import { onValue, ref, push, update, orderByChild, query } from 'firebase/database';
 import { database } from '../../config/firebase';
 // import { Card } from '@material-ui/core';
 import Swal from 'sweetalert2';
@@ -25,23 +25,28 @@ const Main = () => {
     const [errors, setErrors] = useState({});
     const [errorsEdit, setErrorsEdit] = useState({});
 
-    const onEdit = (id) => {
-        products.forEach((product) => {
-            if (product.id === id) {
-            console.log(product);
-                setProductE({ id: product.id, name: product.name, price: product.price, quantity: product.quantity });
-                console.log(productE)
-            }
-        })
+    const onEdit = async (id) => {
+        let product = await products.filter(function(product) {
+            return product.id == id; })
+            setProductE(product[0])
+        // products.forEach((product) => {
+        //     if (product.id === id) {
+        //         setProductE({ id: product.id, price: product.price, name: product.name, quantity: product.quantity });
+        //     }
+        // })
+        console.log(productE);
     }
+
     const renderRows = () => (
         products.map((row, index) => (
             <Row key={index} id={row.id} name={row.name} price={row.price} quantity={row.quantity} onEdit={onEdit} />
         ))
     )
+
     useEffect(() => {
         onValue(
-            ref(database, "products"),
+            query(ref(database, 'products')),
+            // ref(database, "products"),
             (Snapshot) => {
                 const productsRes = [];
                 Snapshot.forEach(item => {
@@ -57,47 +62,53 @@ const Main = () => {
     }, []);
 
     const handleChange = (e) => {
-        
-        if (e.target.name === "name") { e.target.value = e.target.value.replace(/ /g, "").toLowerCase();
+
+        if (e.target.name === "name") {
+            e.target.value = e.target.value.replace(/ /g, "").toLowerCase();
             setProduct({
                 ...product,
                 [e.target.name]: e.target.value
-            })     
+            })
         }
-        if (e.target.name === "price") { 
+        if (e.target.name === "price") {
             setProduct({
                 ...product,
                 [e.target.name]: parseFloat(e.target.value)
-            }) }
-        if (e.target.name === "quantity") { 
+            })
+        }
+        if (e.target.name === "quantity") {
             setProduct({
                 ...product,
                 [e.target.name]: parseInt(e.target.value)
-            }) }; 
-        
+            })
+        };
+
         //Remove the error to the edited property
         delete errors[e.target.name];
         setErrors({ ...errors });
     }
 
     const handleChangeEdit = (e) => {
-        if (e.target.name === "name") { e.target.value = e.target.value.replace(/ /g, "").toLowerCase(); 
-            setProduct({
-                ...product,
+        if (e.target.name === "name") {
+            e.target.value = e.target.value.replace(/ /g, "").toLowerCase();
+            setProductE({
+                ...productE,
                 [e.target.name]: e.target.value
-            }) 
+            })
         }
-        
-        if (e.target.name === "price") { 
-            setProduct({
-                ...product,
+
+        if (e.target.name === "price") {
+            setProductE({
+                ...productE,
                 [e.target.name]: parseFloat(e.target.value)
-            }) }
-        if (e.target.name === "quantity") { 
-            setProduct({
-                ...product,
+            })
+        }
+        if (e.target.name === "quantity") {
+            setProductE({
+                ...productE,
                 [e.target.name]: parseInt(e.target.value)
-            }) }; 
+            })
+        };
         //Remove the error to the edited property
         delete errorsEdit[e.target.name];
         setErrorsEdit({ ...errorsEdit });
@@ -132,7 +143,6 @@ const Main = () => {
         }
     }
     const handleValidateEdit = (e) => {
-        console.log(errorsEdit);
         const validaciones = {};
         //apply validation to correspond field
         //Validate required fields
@@ -170,22 +180,21 @@ const Main = () => {
             return null;
         }
         console.log(product);
-        // push(ref(database, 'products'), product)
-        //     .then(response => {
-        //         alertOn("Guardado", "Se agregó correctamente", "success");
-        //         setProduct({});
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     })
+        push(ref(database, 'products'), product)
+            .then(response => {
+                alertOn("Guardado", "Se agregó correctamente", "success");
+                setProduct({});
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     const handleUpdate = async (e) => {
         e.preventDefault();
         // setErrorForm('');
-        delete productE["id"];
         let isThere = products.some((product) => {
-            return product.name === productE.name && product.price !== productE.price && product.quantity !== productE.quantity;
+            return product.name === productE.name && product.id !== productE.id;
         })
         if (Object.keys(errorsEdit).length > 0) {
             alertOn("Imposible guardar", "Hay errores en los campos, corrígelos antes de continuar.", "error");
@@ -195,15 +204,15 @@ const Main = () => {
             alertOn("Duplicado", "Ya existe ese producto.", "warning");
             return null;
         }
-        // update(ref(database, 'products/' + productE.id), productE)
-        //     .then(() => {
-        //         alertOn("Actualizado", "Se actualizó correctamente", "success");
-        //         setProductE({});
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     })
-        console.log(productE);
+        delete productE["id"];
+        update(ref(database, 'products/' + productE.id), productE)
+            .then(() => {
+                alertOn("Actualizado", "Se actualizó correctamente", "success");
+                setProductE({});
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     const alertOn = (title, message, icon) => {
@@ -264,7 +273,6 @@ const Main = () => {
                                         <div className="col-md-6 col-lg-6">
                                             <div className="form-group">
                                                 <label className="col-sm-6 col-form-label"
-                                                //   style="padding-left: 3px;padding-right: 1px;"
                                                 >Price*</label>
                                                 <div className="col-sm-9">
                                                     <input
@@ -282,7 +290,6 @@ const Main = () => {
                                         <div className="col-md-6 col-lg-6">
                                             <div className="form-group">
                                                 <label className="col-sm-6 col-form-label"
-                                                //   style="padding-left: 3px;padding-right: 1px;"
                                                 >Cantidad*</label>
                                                 <div className="col-sm-9">
                                                     <input
@@ -327,44 +334,38 @@ const Main = () => {
                                             // id="name"
                                             name='name'
                                             placeholder="Nombre sin espacios"
-                                            // value={productE.name}
                                             defaultValue={productE.name}
                                             onChange={handleChangeEdit}
                                             onBlur={handleValidateEdit} />
                                         <div className='invalid-feedback'>{errorsEdit.name}</div>
                                     </div>
-                                    <div className="row m-2">
+                                    <div className="row m-1">
                                         <div className="col-md-6 col-lg-6">
-                                            {/* <div className="form-group"> */}
-                                                <label className="col-sm-6 col-form-label"
-                                                //   style="padding-left: 3px;padding-right: 1px;"
-                                                >Price*</label>
-                                                    <input
-                                                        type="number"
-                                                        className={errorsEdit.price && 'form-control is-invalid' || 'form-control is-valid'}
-                                                        // id="price"
-                                                        name='price'
-                                                        defaultValue={productE.price}
-                                                        onChange={handleChangeEdit}
-                                                        onBlur={handleValidateEdit} />
-                                                    <div className='invalid-feedback'>{errorsEdit.price}</div>
-                                            {/* </div> */}
+                                            <label className="col-sm-6 col-form-label"
+                                            >Price*</label>
+                                            <input
+                                                type="number"
+                                                className={errorsEdit.price && 'form-control is-invalid' || 'form-control is-valid'}
+                                                // id="price"
+                                                name='price'
+                                                defaultValue={productE.price}
+                                                onChange={handleChangeEdit}
+                                                onBlur={handleValidateEdit} />
+                                            <div className='invalid-feedback'>{errorsEdit.price}</div>
                                         </div>
                                         <div className="col-md-6 col-lg-6">
                                             {/* <div className="form-group"> */}
-                                                <label className="col-sm-6 col-form-label"
-                                                //   style="padding-left: 3px;padding-right: 1px;"
-                                                >Cantidad*{productE.quantity}</label>
-                                                    <input
-                                                        type="number"
-                                                        className={errorsEdit.quantity && 'form-control is-invalid' || 'form-control is-valid'}
-                                                        // id="quantity"
-                                                        name='quantity'
-                                                        // defaultValue={productE.quantity}
-                                                        onChange={handleChangeEdit}
-                                                        onBlur={handleValidateEdit}
-                                                        defaultValue={productE.quantity} />
-                                                    <div className='invalid-feedback'>{errorsEdit.quantity}</div>
+                                            <label className="col-sm-6 col-form-label"
+                                            >Cantidad*{productE.quantity}</label>
+                                            <input
+                                                type="number"
+                                                className={errorsEdit.quantity && 'form-control is-invalid' || 'form-control is-valid'}
+                                                // id="quantity"
+                                                name='quantity'
+                                                onChange={handleChangeEdit}
+                                                onBlur={handleValidateEdit}
+                                                defaultValue={productE.quantity} />
+                                            <div className='invalid-feedback'>{errorsEdit.quantity}</div>
                                             {/* </div> */}
                                         </div>
                                     </div>

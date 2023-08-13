@@ -4,27 +4,12 @@ import Card from './Card';
 import { onValue, ref } from 'firebase/database';
 import { database } from '../../config/firebase';
 
-// crear paquete
-
 const Main = () => {
     let user = "";
     if (localStorage.getItem("token") && localStorage.getItem("token") === "josnoc.gms@gmail.com") {
         user = "SU";
     }
     const [boxes, setBoxes] = useState([]);
-    // const [box, setBox] = useState({
-    //     no: '1',
-    //     date: '01/01/01',
-    //     by: 'Me',
-    //     ship: '0.00',
-    //     total: '0.00',
-    //     products: [{
-    //         first: {
-    //             name: 'ar',
-    //             quantity: 2
-    //         }
-    //     }]
-    // });
     const [packets, setPackets] = useState([]);
     // let products = "";
 
@@ -49,7 +34,7 @@ const Main = () => {
                 setBoxes(boxesRes);
             }, (error) => { console.log(error); }
         )
-        if( user==="SU" ){
+        if (user === "SU") {
             onValue(
                 ref(database, "packets"),
                 (Snapshot) => {
@@ -62,12 +47,10 @@ const Main = () => {
                         packetsRes.push(packet);
                         let products = "";
                         packet.products.forEach((product, index) => {
-                            if (index > 0 ) { products+=`\n`; }
+                            if (index > 0) { products += `\n`; }
                             products += `${product.name}-${product.quantity}`;
                         })
                         packet.products = products;
-                        // products.push(packet.products);
-                        console.log(products);
                     })
                     setPackets(packetsRes);
                 }, (error) => { console.log(error); }
@@ -80,7 +63,7 @@ const Main = () => {
             <div key={index} className="card border-secondary mb-3 m-1">
                 <div className="card-header">{packet.by}</div>
                 <div className="card-body text-secondary">
-                    <textarea rows={4} className='w-100' style={{border: 'none'}}>{packet.products}</textarea>
+                    <textarea rows={4} className='w-100' readOnly style={{ border: 'none' }}>{packet.products}</textarea>
                 </div>
             </div>
         ))
@@ -90,8 +73,7 @@ const Main = () => {
         <div>{user === "SU" && <div className='w-100 ps-5 mt-3'><Link to={`/add`} type="button" className="btn btn-outline-info">Añadir paquete</Link></div>}
             <div className='d-flex cols-lg-3 justify-content-center'>{renderPackets()}</div>
 
-            <div className='d-flex cols-lg-4 justify-content-center' id='packets_content'>
-                {/* <button type="button" className="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#addPacketModal">Añadir</button> */}
+            <div className='row row-cols-xl-5 row-cols-lg-4 row-cols-md-2 row-cols-sm-2 row-cols-2 ps-3 pe-3 justify-content-center' id='packets_content'>
                 {renderCards()}
 
                 {/* <!-- Modal --> */}
@@ -113,9 +95,6 @@ const Main = () => {
                     </div>
                 </div>
             </div>
-            {/* <div className='w-100 card'>
-                <iframe frameborder="0" height="700px" scrolling="yes" src="https://www.correosdemexico.gob.mx/SSLServicios/SeguimientoEnvio/Seguimiento.aspx" width="100%"></iframe>
-            </div> */}
         </div>
     )
 }

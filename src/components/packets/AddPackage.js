@@ -5,7 +5,7 @@ import { database } from '../../config/firebase';
 import Swal from 'sweetalert2';
 
 //Import Validators
-import { requiredInput, onlyLetters, onlyNumbers, setLongString, valiDate } from '../../utils/validator';
+import { requiredInput, setLongString } from '../../utils/validator';
 
 const AddPackage = () => {
     const currentDate=()=>{let dat= new Date();return `${dat.getDate()}/${dat.getMonth()+1}/${dat.getFullYear()}`;}
@@ -83,7 +83,6 @@ const AddPackage = () => {
 
     const handleSave = async (e) => {
         e.preventDefault();
-        // setErrorForm('');
         if (Object.keys(errors).length > 0) {
             alertOn("Imposible agregar","Hay errores en los campos, corrígelos antes de continuar.","error");
         } else {
@@ -118,8 +117,8 @@ const AddPackage = () => {
     
     
     return (
-        <div className='d-flex justify-content-center mt-5'>
-        <form className="forms-sample m-1 w-50 card" noValidate>
+        <div className='row row-cols-lg-2 row-cols-sm-1 m-2 justify-content-center mt-5'>
+        <form className="forms-sample   card" noValidate>
             <div className="form-group m-2">
                 <label htmlFor="date">Fecha*</label>
                 <input 
@@ -127,7 +126,7 @@ const AddPackage = () => {
                 className={errors.date && 'form-control is-invalid' || 'form-control is-valid'}
                 id="date"
                 name='date'
-                placeholder="fecha"
+                placeholder="Fecha"
                 // defaultValue={currentDate()}
                 defaultValue={newBox.date}
                 onChange={handleChange}
@@ -143,7 +142,7 @@ const AddPackage = () => {
                     className={errors.no && 'form-control is-invalid' || 'form-control is-valid'}
                     id="no" 
                     name='no'
-                    placeholder="número guía"
+                    placeholder="Número guía"
                     defaultValue={newBox.no}
                     onChange={handleChange}
                     onBlur={handleValidate} />
@@ -223,17 +222,6 @@ const AddPackage = () => {
                 <div className="col-md-3 col-lg-3">
                     <div className="form-group row">
                         <button className='btn btn-outline-primary' onClick={saveProducts}>Aplicar</button>
-                        {/* <label className="col-sm-3 col-form-label"
-                        >Precio total*</label>
-                        <div className="col-sm-9">
-                            <textarea
-                            className="form-control" 
-                            id="products-li"
-                            rows={8}
-                            defaultValue={newBox.total}
-                            onChange={handleChange} />
-                            <div id="precioError"></div>
-                        </div> */}
                     </div>
                 </div>
                 <div className='col-md-12 col-lg-12 d-flex justify-content-center'>
