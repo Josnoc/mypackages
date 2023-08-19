@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 const Card = (data) => {
     let boxData = data.data, list = {}, listU = "";
-    console.log(data);
     return (
         <div>
             <div>

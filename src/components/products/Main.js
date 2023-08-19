@@ -204,7 +204,6 @@ const Main = () => {
             alertOn("Duplicado", "Ya existe ese producto.", "warning");
             return null;
         }
-        delete productE["id"];
         update(ref(database, 'products/' + productE.id), productE)
             .then(() => {
                 alertOn("Actualizado", "Se actualizó correctamente", "success");
