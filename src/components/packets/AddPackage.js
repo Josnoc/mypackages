@@ -43,6 +43,7 @@ const AddPackage = () => {
 
     const handleValidate = (e) => {
         const validaciones = {};
+        delete errors['products'];
         //apply validation to correspond field
         //Validate required fields
         let validacion = requiredInput(newBox.no);
@@ -123,14 +124,13 @@ const AddPackage = () => {
                 <label htmlFor="date">Fecha*</label>
                 <input 
                 type="text" 
-                className={errors.date && 'form-control is-invalid' || 'form-control is-valid'}
+                className={(errors.date && 'form-control is-invalid') || 'form-control is-valid'}
                 id="date"
                 name='date'
                 placeholder="Fecha"
                 // defaultValue={currentDate()}
                 defaultValue={newBox.date}
                 onChange={handleChange}
-                readOnly
                 onBlur={handleValidate} />
                 <div className='invalid-feedback'>{errors.date}</div>
             </div>
@@ -139,7 +139,7 @@ const AddPackage = () => {
                     <label htmlFor="no">No. guía*</label>
                     <input 
                     type="text" 
-                    className={errors.no && 'form-control is-invalid' || 'form-control is-valid'}
+                    className={(errors.no && 'form-control is-invalid') || 'form-control is-valid'}
                     id="no" 
                     name='no'
                     placeholder="Número guía"
@@ -150,7 +150,19 @@ const AddPackage = () => {
                 </div>
                 <div className="form-group p-1">
                     <label htmlFor="by">Por</label>
-                    <input 
+                        <select
+                            className={(errors.by && 'form-control is-invalid') || 'form-control is-valid'}
+                            defaultValue={newBox.by}
+                            id="by"
+                            name='by'
+                            onChange={handleChange}
+                            onBlur={handleValidate}
+                            aria-label="Paquetería">
+                            <option >Paquetería</option>
+                            <option value="Correos de México">Correos de México</option>
+                            <option value="UPS">UPS</option>
+                        </select>
+                    {/* <input 
                     type="text" 
                     className={errors.by && 'form-control is-invalid' || 'form-control is-valid'}
                     id="by" 
@@ -158,7 +170,7 @@ const AddPackage = () => {
                     placeholder="Paqueteria"
                     defaultValue={newBox.by}
                     onChange={handleChange}
-                    onBlur={handleValidate} />
+                    onBlur={handleValidate} /> */}
                     <div className='invalid-feedback'>{errors.by}</div>
                 </div>
             </div>
@@ -171,7 +183,7 @@ const AddPackage = () => {
                         <div className="col-sm-9">
                             <input 
                             type="number" 
-                            className={errors.ship && 'form-control is-invalid' || 'form-control is-valid'}
+                            className={(errors.ship && 'form-control is-invalid') || 'form-control is-valid'}
                             id="ship"
                             name='ship'
                             placeholder="Costo de envío"
@@ -190,7 +202,7 @@ const AddPackage = () => {
                         <div className="col-sm-9">
                             <input 
                             type="number" 
-                            className={errors.total && 'form-control is-invalid' || 'form-control is-valid'}
+                            className={(errors.total && 'form-control is-invalid') || 'form-control is-valid'}
                             id="precio"
                             name='total'
                             placeholder="Costo total"
@@ -208,7 +220,7 @@ const AddPackage = () => {
                         >Productos*</label>
                         <div className="col-sm-9">
                             <textarea
-                            className={errors.products && 'form-control is-invalid' || 'form-control is-valid'}
+                            className={(errors.products && 'form-control is-invalid') || 'form-control is-valid'}
                             id="products-li"
                             name='products'
                             placeholder="Nombre-Cantidad
@@ -224,7 +236,7 @@ const AddPackage = () => {
                         <button className='btn btn-outline-primary' onClick={saveProducts}>Aplicar</button>
                     </div>
                 </div>
-                <div className='col-md-12 col-lg-12 d-flex justify-content-center'>
+                <div className='col-md-12 col-lg-12 d-flex justify-content-center mt-2'>
                     <button className='btn btn-success w-50' onClick={handleSave}>Guardar</button>
                 </div>
             </div>

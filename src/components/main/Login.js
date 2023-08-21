@@ -72,9 +72,9 @@ const Login = (props) => {
   }
 
   return (
-    <div className='d-flex justify-content-center align-items-center' style={{ height: '1rem', minHeight: '500px' }}>
+    <div className='d-flex justify-content-center row-cols-lg-3 row-cols-md-3 row-cols-sm-1 m-2 align-items-center' style={{ height: '1rem', minHeight: '500px' }}>
 
-      <div className='card w-25 p-3'>
+      <div className='card p-3'>
         <div className='row'><h1>Ingresar</h1></div>
         <div className='container'>
           <form onSubmit={handelLogin}>

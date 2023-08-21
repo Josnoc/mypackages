@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Row from './Row';
 import { onValue, ref, push, update, orderByChild, query } from 'firebase/database';
 import { database } from '../../config/firebase';
@@ -27,14 +27,13 @@ const Main = () => {
 
     const onEdit = async (id) => {
         let product = await products.filter(function(product) {
-            return product.id == id; })
+            return product.id === id; })
             setProductE(product[0])
         // products.forEach((product) => {
         //     if (product.id === id) {
         //         setProductE({ id: product.id, price: product.price, name: product.name, quantity: product.quantity });
         //     }
         // })
-        console.log(productE);
     }
 
     const renderRows = () => (
@@ -45,7 +44,7 @@ const Main = () => {
 
     useEffect(() => {
         onValue(
-            query(ref(database, 'products')),
+            query(ref(database, 'products'), orderByChild('quantity')),
             // ref(database, "products"),
             (Snapshot) => {
                 const productsRes = [];
@@ -179,7 +178,6 @@ const Main = () => {
             alertOn("Duplicado", "Ya existe ese producto.", "warning");
             return null;
         }
-        console.log(product);
         push(ref(database, 'products'), product)
             .then(response => {
                 alertOn("Guardado", "Se agregó correctamente", "success");
@@ -225,10 +223,10 @@ const Main = () => {
 
     return (
         <div>
-            <div className='w-100 ps-5'><Link type="button" className="btn btn-outline-info ms-5 mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">Agregar Producto</Link></div>
+            <div className='w-100 ps-5'><Link type="button" className="btn btn-outline-light ms-5 mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">Agregar Producto</Link></div>
 
-            <div className='d-flex justify-content-center mt-3'>
-                <div className='w-75 card'>
+            <div className='d-flex row-cols-lg-2 row-cols-md-1 row-cols-sm-1 justify-content-center m-1 mt-3'>
+                <div className='card'>
                     <table className="table">
                         <thead>
                             <tr>
@@ -245,6 +243,7 @@ const Main = () => {
                 </div>
 
 
+            </div>
                 {/* <!-- Modal --> */}
                 <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog">
@@ -259,7 +258,7 @@ const Main = () => {
                                         <label htmlFor="name">Nombre*</label>
                                         <input
                                             type="text"
-                                            className={errors.name && 'form-control is-invalid' || 'form-control is-valid'}
+                                            className={(errors.name && 'form-control is-invalid') || 'form-control is-valid'}
                                             id="name"
                                             name='name'
                                             placeholder="Nombre sin espacios"
@@ -276,7 +275,7 @@ const Main = () => {
                                                 <div className="col-sm-9">
                                                     <input
                                                         type="number"
-                                                        className={errors.price && 'form-control is-invalid' || 'form-control is-valid'}
+                                                        className={(errors.price && 'form-control is-invalid') || 'form-control is-valid'}
                                                         id="price"
                                                         name='price'
                                                         defaultValue={''}
@@ -293,7 +292,7 @@ const Main = () => {
                                                 <div className="col-sm-9">
                                                     <input
                                                         type="number"
-                                                        className={errors.quantity && 'form-control is-invalid' || 'form-control is-valid'}
+                                                        className={(errors.quantity && 'form-control is-invalid') || 'form-control is-valid'}
                                                         id="quantity"
                                                         name='quantity'
                                                         defaultValue={''}
@@ -329,7 +328,7 @@ const Main = () => {
                                         <label htmlFor="name">Nombre*</label>
                                         <input
                                             type="text"
-                                            className={errorsEdit.name && 'form-control is-invalid' || 'form-control is-valid'}
+                                            className={(errorsEdit.name && 'form-control is-invalid') || 'form-control is-valid'}
                                             // id="name"
                                             name='name'
                                             placeholder="Nombre sin espacios"
@@ -344,7 +343,7 @@ const Main = () => {
                                             >Price*</label>
                                             <input
                                                 type="number"
-                                                className={errorsEdit.price && 'form-control is-invalid' || 'form-control is-valid'}
+                                                className={(errorsEdit.price && 'form-control is-invalid') || 'form-control is-valid'}
                                                 // id="price"
                                                 name='price'
                                                 defaultValue={productE.price}
@@ -358,7 +357,7 @@ const Main = () => {
                                             >Cantidad*{productE.quantity}</label>
                                             <input
                                                 type="number"
-                                                className={errorsEdit.quantity && 'form-control is-invalid' || 'form-control is-valid'}
+                                                className={(errorsEdit.quantity && 'form-control is-invalid') || 'form-control is-valid'}
                                                 // id="quantity"
                                                 name='quantity'
                                                 onChange={handleChangeEdit}
@@ -378,7 +377,6 @@ const Main = () => {
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     )
 }

@@ -175,7 +175,7 @@ const CreatePackage = () => {
                             <button className='btn btn-outline-primary' onClick={saveProducts}>Aplicar</button>
                         </div>
                     </div>
-                    <div className='col-md-12 col-lg-12 d-flex justify-content-center'>
+                    <div className='col-md-12 mt-2 col-lg-12 d-flex justify-content-center'>
                         <button className='btn btn-success w-50' onClick={handleSave}>Guardar</button>
                     </div>
                 </div>

@@ -70,7 +70,7 @@ const Main = () => {
     )
 
     return (
-        <div>{user === "SU" && <div className='w-100 ps-5 mt-3'><Link to={`/add`} type="button" className="btn btn-outline-info">Añadir paquete</Link></div>}
+        <div>{user === "SU" && <div className='w-100 ps-5 mt-3'><Link to={`/add`} type="button" className="btn btn-outline-light">Añadir paquete</Link></div>}
             <div className='d-flex cols-lg-3 justify-content-center'>{renderPackets()}</div>
 
             <div className='row row-cols-xl-5 row-cols-lg-4 row-cols-md-2 row-cols-sm-2 row-cols-2 ps-3 pe-3 justify-content-center' id='packets_content'>
