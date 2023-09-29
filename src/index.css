@@ -31,7 +31,7 @@ code {
 #packets_content> div:first-child a:first-child > div {
   /* border:  1px solid #37b6ff; */
   /* box-shadow: 0px -0px 8px 0 rgb(3, 166, 254), 1px 1px 16px 3px rgb(169 167 167); */
-  box-shadow: 0px -0px 8px 0 rgb(255, 255, 255), 1px 1px 16px 3px rgb(255, 255, 255);
+  box-shadow: 0px -0px 8px 0 rgb(255, 168, 61), 1px 1px 16px 3px rgb(252, 177, 86);
 }
 
 .gradient_container {

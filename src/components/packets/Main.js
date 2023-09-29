@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Card from './Card';
-import { onValue, ref } from 'firebase/database';
+import { onValue, ref, query, orderByChild } from 'firebase/database';
 import { database } from '../../config/firebase';
 
 const Main = () => {
@@ -21,7 +21,8 @@ const Main = () => {
 
     useEffect(() => {
         onValue(
-            ref(database, "Boxes"),
+            query(ref(database, "Boxes"), orderByChild('no')),
+            // ref(database, "Boxes"),
             (Snapshot) => {
                 const boxesRes = [];
                 Snapshot.forEach(item => {
@@ -31,6 +32,7 @@ const Main = () => {
                     };
                     boxesRes.push(box);
                 })
+                console.log(boxesRes.reverse());
                 setBoxes(boxesRes);
             }, (error) => { console.log(error); }
         )

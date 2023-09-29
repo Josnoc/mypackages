@@ -31,10 +31,17 @@ const AddPackage = () => {
     }
 
     const handleChange = (e) => {
-        setNewBox({
-            ...newBox, 
-            [e.target.name]: e.target.value
-        })
+        if (e.target.name === "ship" || e.target.name === "total") {
+            setNewBox({
+                ...newBox,
+                [e.target.name]: parseFloat(e.target.value)
+            })
+        } else {
+            setNewBox({
+                ...newBox, 
+                [e.target.name]: e.target.value
+            })
+        }
 
         //Remove the error to the edited property
         delete errors[e.target.name];
